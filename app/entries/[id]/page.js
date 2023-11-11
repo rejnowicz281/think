@@ -1,7 +1,7 @@
 import { getEntry } from "@/actions/entries";
 import Link from "next/link";
 
-export default async function EntriesPage({ params: { id } }) {
+export default async function EntryPage({ params: { id } }) {
     const entry = await getEntry(id);
 
     return (
