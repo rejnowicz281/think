@@ -43,15 +43,14 @@ export async function signUp(formData) {
 export async function githubSignIn() {
     "use server";
 
+    const origin = headers().get("origin");
     const cookieStore = cookies();
     const supabase = createClient(cookieStore);
 
     const { data, error } = await supabase.auth.signInWithOAuth({
         provider: "github",
         options: {
-            redirectTo: process.env.VERCEL_URL
-                ? `https://${process.env.VERCEL_URL}/auth/callback`
-                : "http://localhost:3000/auth/callback",
+            redirectTo: `${origin}/auth/callback`,
         },
     });
 
