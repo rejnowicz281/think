@@ -14,6 +14,9 @@ export default async function Home() {
     return user ? (
         <div className="flex items-center gap-4">
             Hey, {user.email}!
+            <div>
+                <Link href="/entries">Go to Entries</Link>
+            </div>
             <form action={signOut}>
                 <button>Logout</button>
             </form>
