@@ -1,5 +1,7 @@
 import { getThoughts } from "@/actions/thoughts";
 import Link from "next/link";
+import Form from "./components/Form";
+import Thoughts from "./components/Thoughts";
 
 export default async function ThoughtsPage() {
     const thoughts = await getThoughts();
@@ -7,13 +9,8 @@ export default async function ThoughtsPage() {
     return (
         <>
             <Link href="/entries">Go to Entries</Link>
-            <ul>
-                {thoughts.map((thought) => (
-                    <li key={thought.id}>
-                        <Link href={`/thoughts/${thought.id}`}>{thought.text}</Link>
-                    </li>
-                ))}
-            </ul>
+            <Form />
+            <Thoughts thoughts={thoughts} />
         </>
     );
 }
