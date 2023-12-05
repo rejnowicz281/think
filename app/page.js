@@ -12,7 +12,7 @@ export default async function Home() {
     } = await supabase.auth.getUser();
 
     return user ? (
-        <div className="flex items-center gap-4">
+        <div>
             Hey, {user.email}!
             <div>
                 <Link href="/entries">Go to Entries</Link>

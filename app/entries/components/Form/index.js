@@ -1,4 +1,7 @@
+"use client";
+
 import { createEntry } from "@/actions/entries";
+import { useRef } from "react";
 
 export default function Form() {
     const formRef = useRef(null);
@@ -10,8 +13,8 @@ export default function Form() {
 
     return (
         <form action={handleAction} ref={formRef}>
-            <textarea name="text" placeholder="New Entry"></textarea>
-            <button>Submit</button>
+            <input type="date" name="date" />
+            <button>Create Entry</button>
         </form>
     );
 }

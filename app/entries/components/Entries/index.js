@@ -5,7 +5,7 @@ export default function Entries({ entries }) {
         <ul>
             {entries.map((entry) => (
                 <li key={entry.id}>
-                    <Link href={`/entries/${entry.id}`}>{entry.text}</Link>
+                    <Link href={`/entries/${entry.id}`}>{entry.date}</Link>
                 </li>
             ))}
         </ul>

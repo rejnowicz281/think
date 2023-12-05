@@ -32,8 +32,15 @@ export async function createThought(formData) {
 
     const text = formData.get("text") || null;
     const description = formData.get("description") || null;
+    const entry_id =
+        formData.get("entry_id") ||
+        (await supabase.from("entries").select("*").order("date", { ascending: false }).limit(1)).data[0]?.id ||
+        null;
+    // if no entry_id is provided, get the most recent entry and use its id, or null if no entries exist
 
-    const { data: entry, error } = await supabase.from("thoughts").insert([{ text, description, user_id: user.id }]);
+    const { data: entry, error } = await supabase
+        .from("thoughts")
+        .insert([{ text, description, user_id: user.id, entry_id }]);
 
     if (error) {
         const data = {
