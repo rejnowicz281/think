@@ -18,6 +18,9 @@ export default function RootLayout({ children }) {
                 <div>
                     <Link href="/timeline">Go to Timeline</Link>
                 </div>
+                <div>
+                    <Link href="/thoughts">Go to Thoughts</Link>
+                </div>
                 {children}
             </body>
         </html>
