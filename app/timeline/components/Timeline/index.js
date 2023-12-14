@@ -7,24 +7,27 @@ import { Tooltip } from "react-tooltip";
 import formatEntries from "./lib/formatEntries";
 
 export default function Timeline({ entries }) {
-    const { value, totalWords } = formatEntries(entries);
-    const [year, setYear] = useState(Object.keys(value)[0]);
+    const { data, totalWords } = formatEntries(entries);
+    const [year, setYear] = useState(Object.keys(data)[0]);
     const [selected, setSelected] = useState("");
+
+    const value = data[year].entries;
+    const totalYearWords = data[year].totalWords;
 
     return (
         <>
             <select value={year} onChange={(e) => setYear(e.target.value)}>
-                {Object.keys(value).map((year) => (
+                {Object.keys(data).map((year) => (
                     <option key={year} value={year}>
                         {year}
                     </option>
                 ))}
             </select>
             <p>
-                {totalWords} {totalWords < 2 ? "word" : "words"} in {year}
+                {totalYearWords} {totalYearWords == 1 ? "word" : "words"} in {year} / {totalWords} total
             </p>
             <HeatMap
-                value={value[year]}
+                value={value}
                 weekLabels={["", "Mon", "", "Wed", "", "Fri", ""]}
                 monthLabels={["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]}
                 startDate={new Date(`${year}/01/01`)}
@@ -50,7 +53,7 @@ export default function Timeline({ entries }) {
                             className="cell-tooltip"
                             data-tooltip-content={
                                 data.count
-                                    ? `${data.count} ${data.count < 2 ? "word" : "words"} on ${data.date}`
+                                    ? `${data.count} ${data.count == 1 ? "word" : "words"} on ${data.date}`
                                     : `No entry on ${data.date}`
                             }
                             {...props}
@@ -60,14 +63,14 @@ export default function Timeline({ entries }) {
             />
             <Tooltip anchorSelect=".cell-tooltip" place="bottom" />
             {selected !== "" &&
-                (selected.count > 0 ? (
+                (selected.id ? (
                     <>
                         <p>
-                            {selected.count} {selected.count < 2 ? "word" : "words"} on{" "}
+                            {selected.count} {selected.count == 1 ? "word" : "words"} on{" "}
                             <Link href={`/entries/${selected.id}`}>{selected.date}</Link>
                         </p>
                         <ul>
-                            {selected.bullets.map((bullet) => (
+                            {selected.bullets?.map((bullet) => (
                                 <li key={bullet.id}>{bullet.text}</li>
                             ))}
                         </ul>
