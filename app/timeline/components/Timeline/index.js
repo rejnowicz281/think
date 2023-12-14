@@ -16,7 +16,13 @@ export default function Timeline({ entries }) {
 
     return (
         <>
-            <select value={year} onChange={(e) => setYear(e.target.value)}>
+            <select
+                value={year}
+                onChange={(e) => {
+                    setSelected("");
+                    setYear(e.target.value);
+                }}
+            >
                 {Object.keys(data).map((year) => (
                     <option key={year} value={year}>
                         {year}
