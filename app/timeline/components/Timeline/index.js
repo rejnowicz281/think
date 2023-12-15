@@ -8,11 +8,13 @@ import formatEntries from "./lib/formatEntries";
 
 export default function Timeline({ entries }) {
     const { data, totalWords } = formatEntries(entries);
+
     const [year, setYear] = useState(Object.keys(data)[0]);
     const [selected, setSelected] = useState("");
 
     const value = data[year].entries;
     const totalYearWords = data[year].totalWords;
+    const averageWordsPerEntry = data[year].avgWordsPerEntry;
 
     return (
         <>
@@ -31,6 +33,9 @@ export default function Timeline({ entries }) {
             </select>
             <p>
                 {totalYearWords} {totalYearWords == 1 ? "word" : "words"} in {year} / {totalWords} total
+            </p>
+            <p>
+                avg. {averageWordsPerEntry} {averageWordsPerEntry == 1 ? "word" : "words"} / entry
             </p>
             <HeatMap
                 value={value}

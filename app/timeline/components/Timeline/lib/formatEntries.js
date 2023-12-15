@@ -1,3 +1,10 @@
+export function calculateAverageWordsPerEntry(entries) {
+    const days = entries.length;
+    const totalWords = entries.reduce((total, entry) => total + entry.count, 0);
+
+    return Math.round(totalWords / days);
+}
+
 export default function formatEntries(entries) {
     const data = {};
     let totalWords = 0;
@@ -6,8 +13,8 @@ export default function formatEntries(entries) {
         const year = entry.date.split("-")[0];
         if (!data[year]) {
             data[year] = {
-                entries: [],
-                totalWords: 0,
+                entries: [], // entries for the year
+                totalWords: 0, // total words for the year
             };
         }
 
@@ -29,6 +36,10 @@ export default function formatEntries(entries) {
 
         totalWords += words;
     });
+
+    Object.keys(data).forEach(
+        (year) => (data[year].avgWordsPerEntry = calculateAverageWordsPerEntry(data[year].entries))
+    );
 
     return { data, totalWords };
 }
