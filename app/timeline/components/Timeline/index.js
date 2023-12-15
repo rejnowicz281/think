@@ -4,7 +4,7 @@ import HeatMap from "@uiw/react-heat-map";
 import Link from "next/link";
 import { useState } from "react";
 import { Tooltip } from "react-tooltip";
-import formatEntries from "./lib/formatEntries";
+import formatEntries, { calculateCurrentStreak } from "./lib/formatEntries";
 
 export default function Timeline({ entries }) {
     const { data, totalWords } = formatEntries(entries);
@@ -15,6 +15,7 @@ export default function Timeline({ entries }) {
     const value = data[year].entries;
     const totalYearWords = data[year].totalWords;
     const averageWordsPerEntry = data[year].avgWordsPerEntry;
+    const currentStreak = calculateCurrentStreak(entries);
 
     return (
         <>
@@ -31,6 +32,9 @@ export default function Timeline({ entries }) {
                     </option>
                 ))}
             </select>
+            <p>
+                current streak: {currentStreak} {currentStreak == 1 ? "day" : "days"} in a row
+            </p>
             <p>
                 {totalYearWords} {totalYearWords == 1 ? "word" : "words"} in {year} / {totalWords} total
             </p>

@@ -1,4 +1,26 @@
+export function calculateCurrentStreak(entries) {
+    if (!entries) return 0;
+
+    let currentDate = new Date();
+    let currentDateString = currentDate.toISOString().split("T")[0];
+
+    let streak = 0;
+    let i = 0;
+    while (i < entries.length) {
+        if (entries[i].date === currentDateString) {
+            i = 0;
+            streak++;
+            currentDate.setDate(currentDate.getDate() - 1);
+            currentDateString = currentDate.toISOString().split("T")[0];
+        }
+        i++;
+    }
+
+    return streak;
+} // calculate the current streak of entries(continuous days with entries, up to today)
+
 export function calculateAverageWordsPerEntry(entries) {
+    // average words per entry for a given year (meant to be used with formatEntries)
     const days = entries.length;
     const totalWords = entries.reduce((total, entry) => total + entry.count, 0);
 
