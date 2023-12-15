@@ -36,7 +36,7 @@ export default function Timeline({ entries }) {
                 value={value}
                 weekLabels={["", "Mon", "", "Wed", "", "Fri", ""]}
                 monthLabels={["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]}
-                startDate={new Date(`${year}/01/01`)}
+                startDate={new Date(`${year - 1}/12/31`)}
                 endDate={new Date(`${year}/12/31`)}
                 panelColors={{
                     0: "#EBEDF0",
