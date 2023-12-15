@@ -9,7 +9,7 @@ import formatEntries, { calculateCurrentStreak } from "./lib/formatEntries";
 export default function Timeline({ entries }) {
     const { data, totalWords } = formatEntries(entries);
 
-    const [year, setYear] = useState(Object.keys(data)[0]);
+    const [year, setYear] = useState(Object.keys(data)[Object.keys(data).length - 1]);
     const [selected, setSelected] = useState("");
 
     const value = data[year].entries;
