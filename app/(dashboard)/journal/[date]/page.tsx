@@ -44,11 +44,11 @@ export default async function JournalEntryPage({ params: { date } }: { params: {
 
                 <div className="flex flex-col gap-2">
                     {bullets.map((bullet) => (
-                        <BulletContainer key={bullet.id} bullet={bullet} />
+                        <BulletContainer editable={true} key={bullet.id} bullet={bullet} />
                     ))}
+                    <BulletForm date={fullDate} pos={bullets.length + 1} />
                 </div>
             </div>
-            <BulletForm date={fullDate} pos={bullets.length} />
         </div>
     );
 }
