@@ -22,7 +22,7 @@ export default async function JournalEntryPage({ params: { date } }: { params: {
     if (!bullets) return <ErrorContainer />;
 
     const todayYear = new Date().toISOString().split("-")[0];
-    const entryDateYear = date.split("-")[0];
+    const entryDateYear = journalDate.toISOString().split("-")[0];
 
     const monthDay = journalDate.toLocaleDateString("en-US", {
         month: "short",
