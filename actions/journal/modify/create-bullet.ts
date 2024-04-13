@@ -11,15 +11,27 @@ export default async function createBullet(formData: FormData) {
 
     const textFormData = formData.get("text");
     const userIdFormData = formData.get("user_id");
+    const dateFormData = formData.get("date");
+    const posFormData = formData.get("pos");
 
     const text = typeof textFormData === "string" ? textFormData.trim() : null;
     const user_id = typeof userIdFormData === "string" ? userIdFormData.trim() : null;
+    const date =
+        typeof dateFormData === "string"
+            ? new Date(dateFormData).toISOString().split("T")[0]
+            : new Date().toISOString().split("T")[0];
+    const pos = typeof posFormData === "string" ? parseInt(posFormData) : null;
 
-    if (!text || !user_id) return actionError(actionName, { error: "Invalid Form Data" });
+    if (!text || !user_id || !pos) return actionError(actionName, { error: "Invalid Form Data" });
 
-    const { error } = await supabase.from("bullets").insert({ text, user_id });
+    const { error } = await supabase.from("bullets").insert({
+        text,
+        user_id,
+        pos,
+        date,
+    });
 
     if (error) return actionError(actionName, { error: error.message });
 
-    return actionSuccess(actionName, { text }, { revalidatePath: "/entries" });
+    return actionSuccess(actionName, { text }, { revalidatePath: "/" });
 }

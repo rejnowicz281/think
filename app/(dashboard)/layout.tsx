@@ -18,7 +18,16 @@ export default async function DashboardLayout({ children }: { children: ReactNod
                 <div className="flex justify-between bg-zinc-900 border-t border-t-neutral-300 dark:border-t-neutral-800 p-2">
                     <div className="flex">
                         <Button asChild variant="ghost">
-                            <Link href="/entries">Entries</Link>
+                            <Link href="/">Entries</Link>
+                        </Button>
+                        <Button asChild variant="ghost">
+                            <Link href="/journal/today">Today</Link>
+                        </Button>
+                        <Button asChild variant="ghost">
+                            <Link href="/journal/yesterday">Yesterday</Link>
+                        </Button>
+                        <Button asChild variant="ghost">
+                            <Link href="/journal/tomorrow">Tomorrow</Link>
                         </Button>
                     </div>
                     <form action={signOut}>
