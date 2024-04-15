@@ -11,14 +11,12 @@ export default async function JournalPage() {
     const entriesLength = Object.keys(entries).length;
 
     return (
-        <div className="flex-1 flex flex-col max-w-[750px] w-full mx-auto p-12 gap-4">
-            <div className="flex flex-col gap-4">
-                {entriesLength > 0 ? (
-                    Object.keys(entries).map((date) => <EntryLink key={date} date={date} bullets={entries[date]} />)
-                ) : (
-                    <BulletForm placeholder="Add bullet for today" />
-                )}
-            </div>
+        <div className="flex-1 flex flex-col max-w-[700px] w-full mx-auto p-6 pt-16 gap-4">
+            {entriesLength > 0 ? (
+                Object.keys(entries).map((date) => <EntryLink key={date} date={date} bullets={entries[date]} />)
+            ) : (
+                <BulletForm placeholder="Add bullet for today" />
+            )}
         </div>
     );
 }

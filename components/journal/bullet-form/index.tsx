@@ -35,7 +35,7 @@ export default function BulletForm({
     }
 
     return (
-        <form className="flex-1 flex items-center gap-2" action={handleAction}>
+        <form className="flex-1 flex gap-2" action={handleAction}>
             <BulletIndicator />
             <input type="hidden" name="user_id" value={user.id} />
             {date && <input type="hidden" name="date" value={date} />}

@@ -13,11 +13,14 @@ export default function EntryLink({ bullets, date }: { bullets: Bullet[]; date: 
         day: "numeric",
     });
 
+    const isToday = date === new Date().toISOString().split("T")[0];
+    const isYesterday = date === new Date(Date.now() - 86400000).toISOString().split("T")[0];
+    const isTomorrow = date === new Date(Date.now() + 86400000).toISOString().split("T")[0];
+
+    const href = `/journal/${isToday ? "today" : isYesterday ? "yesterday" : isTomorrow ? "tomorrow" : date}`;
+
     return (
-        <Link
-            className="hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors rounded-md"
-            href={`/journal/${date}`}
-        >
+        <Link className="hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors rounded-md" href={href}>
             <div className="p-4 flex flex-col gap-2" key={date}>
                 <h2 className="text-2xl font-bold">{formattedDate}</h2>
                 <BulletsContainer bulletList={bullets} />

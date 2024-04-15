@@ -72,14 +72,17 @@ export default function EditableBullet({ bullet, onDragEnd }: { bullet: Bullet; 
                         id={`text-${bullet.id}`}
                         name="text"
                         defaultValue={bullet.text}
-                        className="bg-inherit outline-none resize-none overflow-hidden"
+                        className="bg-inherit outline-none resize-none overflow-hidden leading-relaxed"
                         ref={textareaRef}
                     />
 
                     <button type="submit" ref={submitRef} className="hidden"></button>
                 </form>
             ) : (
-                <p onClick={() => setEditing(true)} className="cursor-text flex-1 word-break whitespace-pre-line">
+                <p
+                    onClick={() => setEditing(true)}
+                    className="leading-relaxed cursor-text flex-1 word-break whitespace-pre-line"
+                >
                     {optimisticText}
                 </p>
             )}
@@ -89,7 +92,7 @@ export default function EditableBullet({ bullet, onDragEnd }: { bullet: Bullet; 
                     controls.start(e);
                 }}
                 style={{ touchAction: "none" }}
-                className="opacity-0 self-start group-focus-within:opacity-50 group-hover:opacity-50 transition-opacity cursor-move"
+                className="opacity-0 self-start group-focus-within:opacity-25 group-hover:opacity-50 transition-opacity cursor-move"
             >
                 <RxDragHandleDots2 className="shrink-0 text-xl" />
             </button>
