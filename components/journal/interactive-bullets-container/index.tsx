@@ -11,7 +11,10 @@ export default function InteractiveBulletsContainer({ bulletList }: { bulletList
     const [bullets, setBullets] = useState<Bullet[]>(bulletList);
     const submitRef = useRef<HTMLButtonElement>(null);
 
+    // making sure position is updated on error
     useEffect(() => {
+        if (JSON.stringify(bullets) === JSON.stringify(optimisticBullets)) return;
+
         setBullets(optimisticBullets);
     }, [optimisticBullets]);
 
@@ -21,6 +24,7 @@ export default function InteractiveBulletsContainer({ bulletList }: { bulletList
                 className="hidden"
                 action={() => {
                     if (JSON.stringify(bullets) === JSON.stringify(optimisticBullets)) return;
+
                     setOptimisticBullets(bullets);
                     updateBulletsPos(bullets);
                 }}
@@ -43,13 +47,20 @@ export default function InteractiveBulletsContainer({ bulletList }: { bulletList
                 axis="y"
                 values={bullets.map((bullet) => bullet.pos)}
             >
-                {bullets.map((bullet) => (
-                    <EditableBullet
-                        key={bullet.id}
-                        bullet={optimisticBullets.find((b) => b.id === bullet.id) || bullet}
-                        onDragEnd={() => submitRef.current?.click()}
-                    />
-                ))}
+                {bullets.map((bullet) =>
+                    (() => {
+                        const optimisticBullet = optimisticBullets.find((b) => b.id === bullet.id);
+
+                        if (!optimisticBullet) return null;
+
+                        // make sure bullet uses the draggable position, not the optimistic one
+                        const b = { ...optimisticBullet, pos: bullet.pos };
+
+                        return (
+                            <EditableBullet key={bullet.id} bullet={b} onDragEnd={() => submitRef.current?.click()} />
+                        );
+                    })()
+                )}
             </Reorder.Group>
         </>
     );

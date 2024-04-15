@@ -41,6 +41,28 @@ export default function BulletForm({
             {date && <input type="hidden" name="date" value={date} />}
             <input type="hidden" name="pos" value={pos || 1} />
             <ReactTextareaAutosize
+                onKeyDown={(e) => {
+                    const cleared = e.key === "Backspace" && e.currentTarget.selectionStart === 0;
+                    const leftArrowStart = e.key === "ArrowLeft" && e.currentTarget.selectionStart === 0;
+                    const enterShift = e.key === "Enter" && e.shiftKey;
+
+                    if (cleared || leftArrowStart) {
+                        e.preventDefault();
+
+                        const bulletParagraphs =
+                            e.currentTarget.parentElement?.previousElementSibling?.querySelectorAll(
+                                ".bullet"
+                            ) as NodeListOf<HTMLElement>;
+
+                        const lastBullet = bulletParagraphs[bulletParagraphs.length - 1];
+
+                        if (lastBullet) lastBullet.click();
+                    } else if (enterShift) {
+                        e.preventDefault();
+
+                        handleSubmit();
+                    }
+                }}
                 onFocus={(e) => {
                     const temp_value = e.target.value;
                     e.target.value = "";
@@ -49,7 +71,7 @@ export default function BulletForm({
                 onBlur={handleSubmit}
                 name="text"
                 placeholder={placeholder}
-                className="flex-1 bg-inherit outline-none resize-none overflow-hidden"
+                className="new-bullet-form flex-1 bg-inherit outline-none resize-none overflow-hidden"
                 ref={textareaRef}
             />
 

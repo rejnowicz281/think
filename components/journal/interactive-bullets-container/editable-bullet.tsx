@@ -90,6 +90,45 @@ export default function EditableBullet({ bullet, onDragEnd }: { bullet: Bullet; 
                             e.target.value = "";
                             e.target.value = temp_value;
                         }}
+                        onKeyDown={(e) => {
+                            const cleared = e.currentTarget.value === "";
+                            const backspaceStart = e.key === "Backspace" && e.currentTarget.selectionStart === 0;
+                            const leftArrowStart = e.key === "ArrowLeft" && e.currentTarget.selectionStart === 0;
+                            const rightArrowEnd =
+                                e.key === "ArrowRight" &&
+                                e.currentTarget.selectionStart === e.currentTarget.value.length;
+                            const enterShift = e.key === "Enter" && e.shiftKey;
+
+                            const goToNextBullet = () => {
+                                e.preventDefault();
+
+                                const nextBulletSibling =
+                                    e.currentTarget.parentElement?.parentElement?.nextElementSibling;
+
+                                if (nextBulletSibling) {
+                                    const nextBullet = nextBulletSibling.querySelector(".bullet") as HTMLElement;
+
+                                    if (nextBullet) nextBullet.click();
+                                } else {
+                                    const bulletForm = document.querySelector(".new-bullet-form") as HTMLElement;
+
+                                    if (bulletForm) bulletForm.focus();
+                                }
+                            };
+
+                            if (backspaceStart || leftArrowStart) {
+                                e.preventDefault();
+
+                                const prevBullet =
+                                    e.currentTarget.parentElement?.parentElement?.previousElementSibling?.querySelector(
+                                        ".bullet"
+                                    ) as HTMLElement;
+
+                                if (prevBullet) prevBullet.click();
+                                else if (cleared) goToNextBullet();
+                            } else if (rightArrowEnd) goToNextBullet();
+                            else if (enterShift) handleSubmit();
+                        }}
                         onBlur={handleSubmit}
                         id={`text-${bullet.id}`}
                         name="text"
@@ -103,7 +142,7 @@ export default function EditableBullet({ bullet, onDragEnd }: { bullet: Bullet; 
             ) : (
                 <p
                     onClick={() => setEditing(true)}
-                    className="leading-relaxed cursor-text flex-1 word-break whitespace-pre-line"
+                    className="bullet leading-relaxed cursor-text flex-1 word-break whitespace-pre-line"
                 >
                     {optimisticText}
                 </p>
