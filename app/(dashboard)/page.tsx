@@ -11,7 +11,7 @@ export default async function JournalPage() {
     const entriesLength = Object.keys(entries).length;
 
     return (
-        <div className="flex-1 flex flex-col max-w-[700px] w-full mx-auto p-6 pt-16 gap-4">
+        <div className="flex-1 flex flex-col max-w-[700px] w-full mx-auto px-6 py-16 gap-4">
             {entriesLength > 0 ? (
                 Object.keys(entries).map((date) => <EntryLink key={date} date={date} bullets={entries[date]} />)
             ) : (
