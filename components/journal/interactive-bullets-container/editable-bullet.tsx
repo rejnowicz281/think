@@ -4,6 +4,7 @@ import deleteBullet from "@/actions/journal/modify/delete-bullet";
 import updateBullet from "@/actions/journal/modify/update-bullet";
 import { Bullet } from "@/types/bullet";
 import { RxDragHandleDots2 } from "@react-icons/all-files/rx/RxDragHandleDots2";
+import { VscLoading } from "@react-icons/all-files/vsc/VscLoading";
 import { Reorder, useDragControls } from "framer-motion";
 import { PointerEvent, useEffect, useOptimistic, useRef, useState } from "react";
 import ReactTextareaAutosize from "react-textarea-autosize";
@@ -15,6 +16,7 @@ export default function EditableBullet({ bullet, onDragEnd }: { bullet: Bullet; 
     const [optimisticDelete, setOptimisticDelete] = useOptimistic(false);
     const [editing, setEditing] = useState(false);
     const controls = useDragControls();
+    const [loading, setLoading] = useOptimistic(false);
 
     useEffect(() => {
         if (textareaRef.current) textareaRef.current.value = optimisticText;
@@ -31,18 +33,21 @@ export default function EditableBullet({ bullet, onDragEnd }: { bullet: Bullet; 
         }
     }
 
-    function handleAction(formData: FormData) {
+    async function handleAction(formData: FormData) {
         const inputFormData = formData.get("text");
         const input = typeof inputFormData === "string" ? inputFormData.trim() : "";
 
         if (input === optimisticText) return;
 
+        setLoading(true);
         setOptimisticText(input);
 
         if (input === "") {
             setOptimisticDelete(true);
-            deleteBullet(formData);
-        } else updateBullet(formData, bullet.text);
+            await deleteBullet(formData);
+        } else await updateBullet(formData, bullet.text);
+
+        setLoading(false);
     }
 
     if (optimisticDelete) return null;
@@ -58,7 +63,24 @@ export default function EditableBullet({ bullet, onDragEnd }: { bullet: Bullet; 
             dragControls={controls}
             value={bullet.pos}
         >
-            <div className="shrink-0 w-2 h-2 rounded-full bg-blue-500 mt-2"></div>
+            {loading ? (
+                <VscLoading className="w-2 h-2 animate-spin mt-2" />
+            ) : (
+                <div
+                    onPointerDown={(e: PointerEvent<Element> | PointerEvent) => {
+                        e.preventDefault();
+                        controls.start(e);
+                    }}
+                    style={{ touchAction: "none" }}
+                    className="w-2 flex items-start justify-center relative cursor-move"
+                >
+                    <div className="mt-1 flex-1 opacity-0 transition-opacity duration-300 absolute group-focus-within:flex group-focus-within:opacity-25 group-focus-within:static group-hover:static group-hover:flex group-hover:opacity-75">
+                        <RxDragHandleDots2 className="flex-1 shrink-0 text-xl" />
+                    </div>
+                    <div className="mt-2 flex-1 h-2 transition-opacity duration-300 opacity-100 group-focus-within:opacity-0 group-focus-within:absolute group-hover:opacity-0 group-hover:absolute shrink-0 rounded-full bg-blue-500"></div>
+                </div>
+            )}
+
             {editing ? (
                 <form className="flex-1 flex flex-col" action={handleAction}>
                     <input type="hidden" name="id" value={bullet.id} />
@@ -86,16 +108,6 @@ export default function EditableBullet({ bullet, onDragEnd }: { bullet: Bullet; 
                     {optimisticText}
                 </p>
             )}
-            <button
-                onPointerDown={(e: PointerEvent<Element> | PointerEvent) => {
-                    e.preventDefault();
-                    controls.start(e);
-                }}
-                style={{ touchAction: "none" }}
-                className="opacity-0 self-start group-focus-within:opacity-25 group-hover:opacity-50 transition-opacity cursor-move"
-            >
-                <RxDragHandleDots2 className="shrink-0 text-xl" />
-            </button>
         </Reorder.Item>
     );
 }
