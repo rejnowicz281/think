@@ -2,7 +2,7 @@
 
 import createBullet from "@/actions/journal/modify/create-bullet";
 import useAuthContext from "@/providers/auth-provider";
-import { useRef } from "react";
+import { useOptimistic, useRef } from "react";
 import ReactTextareaAutosize from "react-textarea-autosize";
 import BulletIndicator from "./bullet-indicator";
 
@@ -18,9 +18,10 @@ export default function BulletForm({
     const textareaRef = useRef<HTMLTextAreaElement>(null);
     const submitRef = useRef<HTMLButtonElement>(null);
     const { user } = useAuthContext();
+    const [loading, setLoading] = useOptimistic(false);
 
     function handleSubmit() {
-        if (submitRef.current) submitRef.current.click();
+        if (submitRef.current && !loading) submitRef.current.click();
     }
 
     async function handleAction(formData: FormData) {
@@ -29,14 +30,18 @@ export default function BulletForm({
 
         if (input === "") return;
 
+        setLoading(true);
+
         const res = await createBullet(formData);
+
+        setLoading(false);
 
         if (res && textareaRef.current) textareaRef.current.value = "";
     }
 
     return (
         <form className="flex-1 flex gap-2" action={handleAction}>
-            <BulletIndicator />
+            <BulletIndicator loading={loading} />
             <input type="hidden" name="user_id" value={user.id} />
             {date && <input type="hidden" name="date" value={date} />}
             <input type="hidden" name="pos" value={pos || 1} />
