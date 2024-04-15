@@ -1,6 +1,6 @@
 import { Bullet } from "@/types/bullet";
 import Link from "next/link";
-import BulletContainer from "./bullet-container";
+import BulletsContainer from "./bullets-container";
 
 export default function EntryLink({ bullets, date }: { bullets: Bullet[]; date: string; asLink?: boolean }) {
     const todayYear = new Date().toISOString().split("-")[0];
@@ -20,11 +20,7 @@ export default function EntryLink({ bullets, date }: { bullets: Bullet[]; date: 
         >
             <div className="p-4 flex flex-col gap-2" key={date}>
                 <h2 className="text-2xl font-bold">{formattedDate}</h2>
-                <div className="flex flex-col gap-2">
-                    {bullets.map((bullet) => (
-                        <BulletContainer key={bullet.id} bullet={bullet} />
-                    ))}
-                </div>
+                <BulletsContainer bulletList={bullets} />
             </div>
         </Link>
     );

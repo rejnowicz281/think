@@ -3,15 +3,18 @@
 import deleteBullet from "@/actions/journal/modify/delete-bullet";
 import updateBullet from "@/actions/journal/modify/update-bullet";
 import { Bullet } from "@/types/bullet";
-import { useEffect, useOptimistic, useRef, useState } from "react";
+import { RxDragHandleDots2 } from "@react-icons/all-files/rx/RxDragHandleDots2";
+import { Reorder, useDragControls } from "framer-motion";
+import { PointerEvent, useEffect, useOptimistic, useRef, useState } from "react";
 import ReactTextareaAutosize from "react-textarea-autosize";
 
-export default function EditableBullet({ bullet }: { bullet: Bullet; editable?: boolean }) {
+export default function EditableBullet({ bullet, onDragEnd }: { bullet: Bullet; onDragEnd: () => any }) {
     const textareaRef = useRef<HTMLTextAreaElement>(null);
     const submitRef = useRef<HTMLButtonElement>(null);
     const [optimisticText, setOptimisticText] = useOptimistic(bullet.text);
     const [optimisticDelete, setOptimisticDelete] = useOptimistic(false);
     const [editing, setEditing] = useState(false);
+    const controls = useDragControls();
 
     useEffect(() => {
         if (textareaRef.current) textareaRef.current.value = optimisticText;
@@ -39,13 +42,22 @@ export default function EditableBullet({ bullet }: { bullet: Bullet; editable?: 
         if (input === "") {
             setOptimisticDelete(true);
             deleteBullet(formData);
-        } else updateBullet(formData, bullet);
+        } else updateBullet(formData, bullet.text);
     }
 
     if (optimisticDelete) return null;
 
     return (
-        <div className="flex gap-2">
+        <Reorder.Item
+            layout="position"
+            as="div"
+            className="flex gap-2 group"
+            onDragEnd={onDragEnd}
+            key={bullet.id}
+            dragListener={false}
+            dragControls={controls}
+            value={bullet.pos}
+        >
             <div className="shrink-0 w-2 h-2 rounded-full bg-blue-500 mt-2"></div>
             {editing ? (
                 <form className="flex-1 flex flex-col" action={handleAction}>
@@ -71,6 +83,16 @@ export default function EditableBullet({ bullet }: { bullet: Bullet; editable?: 
                     {optimisticText}
                 </p>
             )}
-        </div>
+            <button
+                onPointerDown={(e: PointerEvent<Element> | PointerEvent) => {
+                    e.preventDefault();
+                    controls.start(e);
+                }}
+                style={{ touchAction: "none" }}
+                className="opacity-0 self-start group-focus-within:opacity-50 group-hover:opacity-50 transition-opacity cursor-move"
+            >
+                <RxDragHandleDots2 className="shrink-0 text-xl" />
+            </button>
+        </Reorder.Item>
     );
 }

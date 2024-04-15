@@ -1,7 +1,7 @@
 import getDateBullets from "@/actions/journal/read/get-date-bullets";
 import ErrorContainer from "@/components/general/error-container";
-import BulletContainer from "@/components/journal/bullet-container";
 import BulletForm from "@/components/journal/bullet-form";
+import InteractiveBulletsContainer from "@/components/journal/interactive-bullets-container";
 import { Button } from "@/components/ui/button";
 import { MdKeyboardArrowLeft } from "@react-icons/all-files/md/MdKeyboardArrowLeft";
 import Link from "next/link";
@@ -43,9 +43,7 @@ export default async function JournalEntryPage({ params: { date } }: { params: {
                 <h2 className="text-xl text-gray-500 font-semibold">{weekday}</h2>
 
                 <div className="flex flex-col gap-2">
-                    {bullets.map((bullet) => (
-                        <BulletContainer editable={true} key={bullet.id} bullet={bullet} />
-                    ))}
+                    <InteractiveBulletsContainer bulletList={bullets} />
                     <BulletForm date={fullDate} pos={bullets.length + 1} />
                 </div>
             </div>

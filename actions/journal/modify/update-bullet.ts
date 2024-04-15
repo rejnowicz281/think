@@ -1,11 +1,10 @@
 "use server";
 
-import { Bullet } from "@/types/bullet";
 import actionError from "@/utils/actions/action-error";
 import actionSuccess from "@/utils/actions/action-success";
 import { createClient } from "@/utils/supabase/server";
 
-export default async function updateBullet(formData: FormData, oldBullet: Bullet) {
+export default async function updateBullet(formData: FormData, oldText: string) {
     const actionName = "updateBullet";
 
     const supabase = createClient();
@@ -18,7 +17,7 @@ export default async function updateBullet(formData: FormData, oldBullet: Bullet
     const pos = typeof posFormData === "string" ? parseInt(posFormData) : null;
     const id = typeof idFormData === "string" ? idFormData.trim() : null;
 
-    if (text === oldBullet.text) return actionSuccess(actionName, { text });
+    if (text === oldText) return actionSuccess(actionName, { text });
 
     if (!id || (!text && !pos)) return actionError(actionName, { error: "Invalid Form Data" }, { revalidatePath: "/" });
 
