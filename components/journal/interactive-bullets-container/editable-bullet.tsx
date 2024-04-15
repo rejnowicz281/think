@@ -132,7 +132,7 @@ export default function EditableBullet({ bullet, onDragEnd }: { bullet: Bullet; 
                         onBlur={handleSubmit}
                         id={`text-${bullet.id}`}
                         name="text"
-                        defaultValue={bullet.text}
+                        defaultValue={optimisticText}
                         className="bg-inherit outline-none resize-none overflow-hidden leading-relaxed"
                         ref={textareaRef}
                     />
