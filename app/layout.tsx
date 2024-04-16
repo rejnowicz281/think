@@ -15,7 +15,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     return (
         <html className="h-full" lang="en">
             <body className={clsx("min-h-full flex flex-col", GeistSans.className)}>
-                <ThemeProvider attribute="class" defaultTheme="dark">
+                <ThemeProvider attribute="class" defaultTheme="light">
                     <NextTopLoader height={4} showSpinner={false} />
                     {children}
                 </ThemeProvider>

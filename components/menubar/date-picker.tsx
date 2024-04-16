@@ -16,27 +16,14 @@ export default function DatePicker() {
     const [date, setDate] = useState<Date>();
     const pathname = usePathname();
 
-    const formatDate = (date?: Date) => {
-        if (!date) return "Today";
-
-        const formattedDate = format(date, "yyyy-MM-dd");
-        const tomorrow = format(addDays(new Date(), 1), "yyyy-MM-dd");
-        const yesterday = format(addDays(new Date(), -1), "yyyy-MM-dd");
-
-        if (formattedDate === yesterday) return "Yesterday";
-        if (formattedDate === tomorrow) return "Tomorrow";
-
-        return formattedDate;
-    };
+    const today = format(new Date(), "yyyy-MM-dd");
 
     return (
         <Popover
             onOpenChange={() => {
                 const linkDate = pathname.split("/").pop();
 
-                if (linkDate === "today") setDate(undefined);
-                else if (linkDate === "yesterday") setDate(addDays(new Date(), -1));
-                else if (linkDate === "tomorrow") setDate(addDays(new Date(), 1));
+                if (linkDate === "write" || linkDate === today) setDate(undefined);
                 else if (linkDate) setDate(new Date(linkDate));
             }}
         >
@@ -65,9 +52,7 @@ export default function DatePicker() {
                     mode="single"
                     selected={date}
                     onSelect={(date) => {
-                        setDate(
-                            !date || format(date, "yyyy-MM-dd") === format(new Date(), "yyyy-MM-dd") ? undefined : date
-                        );
+                        setDate(!date || format(date, "yyyy-MM-dd") === today ? undefined : date);
                     }}
                     defaultMonth={date}
                 />
@@ -75,9 +60,23 @@ export default function DatePicker() {
                 <PopoverClose asChild>
                     <Button variant="outline" asChild>
                         {(() => {
-                            const formattedDate = formatDate(date);
+                            const formattedDate = date ? format(date, "yyyy-MM-dd") : format(new Date(), "yyyy-MM-dd");
 
-                            return <Link href={`/journal/${formattedDate.toLowerCase()}`}>{formattedDate}</Link>;
+                            const isToday = formattedDate === today;
+                            const isTomorrow = formattedDate === format(addDays(new Date(), 1), "yyyy-MM-dd");
+                            const isYesterday = formattedDate === format(addDays(new Date(), -1), "yyyy-MM-dd");
+
+                            return (
+                                <Link href={`/journal/${formattedDate.toLowerCase()}`}>
+                                    {isToday
+                                        ? "Today"
+                                        : isTomorrow
+                                        ? "Tomorrow"
+                                        : isYesterday
+                                        ? "Yesterday"
+                                        : formattedDate}
+                                </Link>
+                            );
                         })()}
                     </Button>
                 </PopoverClose>
