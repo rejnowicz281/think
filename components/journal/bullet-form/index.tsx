@@ -40,47 +40,43 @@ export default function BulletForm({
     }
 
     return (
-        <form className="flex-1 flex gap-2" action={handleAction}>
+        <div className="flex gap-2">
             <BulletIndicator loading={loading} />
-            <input type="hidden" name="user_id" value={user.id} />
-            {date && <input type="hidden" name="date" value={date} />}
-            <input type="hidden" name="pos" value={pos || 1} />
-            <ReactTextareaAutosize
-                onKeyDown={(e) => {
-                    const cleared = e.key === "Backspace" && e.currentTarget.selectionStart === 0;
-                    const leftArrowStart = e.key === "ArrowLeft" && e.currentTarget.selectionStart === 0;
-                    const enterShift = e.key === "Enter" && e.shiftKey;
-
-                    if (cleared || leftArrowStart) {
-                        e.preventDefault();
-
-                        const bulletParagraphs =
-                            e.currentTarget.parentElement?.previousElementSibling?.querySelectorAll(
-                                ".bullet"
-                            ) as NodeListOf<HTMLElement>;
-
-                        const lastBullet = bulletParagraphs[bulletParagraphs.length - 1];
-
-                        if (lastBullet) lastBullet.click();
-                    } else if (enterShift) {
-                        e.preventDefault();
-
-                        handleSubmit();
-                    }
-                }}
-                onFocus={(e) => {
-                    const temp_value = e.target.value;
-                    e.target.value = "";
-                    e.target.value = temp_value;
-                }}
-                onBlur={handleSubmit}
-                name="text"
-                placeholder={placeholder}
-                className="new-bullet-form flex-1 bg-inherit outline-none resize-none overflow-hidden"
-                ref={textareaRef}
-            />
-
-            <button type="submit" ref={submitRef} className="hidden"></button>
-        </form>
+            <form className="flex-1 flex gap-2" action={handleAction}>
+                <input type="hidden" name="user_id" value={user.id} />
+                {date && <input type="hidden" name="date" value={date} />}
+                <input type="hidden" name="pos" value={pos || 1} />
+                <ReactTextareaAutosize
+                    onKeyDown={(e) => {
+                        const cleared = e.key === "Backspace" && e.currentTarget.selectionStart === 0;
+                        const leftArrowStart = e.key === "ArrowLeft" && e.currentTarget.selectionStart === 0;
+                        const enterShift = e.key === "Enter" && e.shiftKey;
+                        if (cleared || leftArrowStart) {
+                            e.preventDefault();
+                            const bulletParagraphs =
+                                e.currentTarget.parentElement?.previousElementSibling?.querySelectorAll(
+                                    ".bullet"
+                                ) as NodeListOf<HTMLElement>;
+                            const lastBullet = bulletParagraphs[bulletParagraphs.length - 1];
+                            if (lastBullet) lastBullet.click();
+                        } else if (enterShift) {
+                            e.preventDefault();
+                            handleSubmit();
+                        }
+                    }}
+                    onFocus={(e) => {
+                        const temp_value = e.target.value;
+                        e.target.value = "";
+                        e.target.value = temp_value;
+                    }}
+                    onBlur={handleSubmit}
+                    name="text"
+                    placeholder={placeholder}
+                    className="new-bullet-form flex-1 bg-inherit outline-none resize-none overflow-hidden"
+                    ref={textareaRef}
+                />
+                <button type="submit" ref={submitRef} className="hidden"></button>
+            </form>
+        </div>
     );
 }

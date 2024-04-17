@@ -1,6 +1,6 @@
 import BulletForm from "@/components/journal/bullet-form";
-import InteractiveBulletsContainer from "@/components/journal/interactive-bullets-container";
 import { Bullet } from "@/types/bullet";
+import InteractiveBulletsContainer from "./interactive-bullets-container";
 
 export default function InteractiveEntryContainer({ bullets, date }: { bullets: Bullet[]; date: string }) {
     const journalDate = new Date(date);
