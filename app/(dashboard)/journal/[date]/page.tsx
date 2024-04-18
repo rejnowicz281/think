@@ -16,8 +16,10 @@ export default async function JournalEntryPage({ params: { date } }: { params: {
     const nextDate = format(addDays(new Date(date), 1), "yyyy-MM-dd");
 
     return (
-        <div className="relative flex flex-col flex-1 max-w-[700px] w-full mx-auto px-8 pt-16">
-            <InteractiveEntryContainer bullets={bullets} date={date} />
+        <div className="relative flex flex-col flex-1 max-w-[700px] w-full mx-auto">
+            <div className="flex-1 flex flex-col px-8 pt-16">
+                <InteractiveEntryContainer bullets={bullets} date={date} />
+            </div>
 
             <div className="dark:bg-[#121212] bg-white border-t dark:border-t-neutral-800 border-t-neutral-300 flex mt-16 sticky bottom-0">
                 <Button asChild variant="ghost" className="rounded-none flex-1">

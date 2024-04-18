@@ -1,6 +1,7 @@
 "use client";
 
 import { Bullet } from "@/types/bullet";
+import smallDeviceDetected from "@/utils/general/small-device-detected";
 import { Reorder, useDragControls } from "framer-motion";
 import { useOptimistic, useState } from "react";
 import EditableBulletForm from "./editable-bullet-form";
@@ -15,37 +16,50 @@ export default function EditableBullet({ bullet, onDragEnd }: { bullet: Bullet; 
 
     if (optimisticDelete) return null;
 
-    return (
-        <Reorder.Item
-            layout="position"
-            as="div"
-            className="flex gap-2 group"
-            onDragEnd={onDragEnd}
-            key={bullet.id}
-            dragListener={false}
-            dragControls={controls}
-            value={bullet.pos}
-        >
-            <EditableBulletIndicator loading={loading} controls={controls} />
+    function Content() {
+        return (
+            <>
+                <EditableBulletIndicator loading={loading} controls={controls} />
+                {editing ? (
+                    <EditableBulletForm
+                        bullet={bullet}
+                        setLoading={setLoading}
+                        editing={editing}
+                        setEditing={setEditing}
+                        optimisticText={optimisticText}
+                        setOptimisticText={setOptimisticText}
+                        setOptimisticDelete={setOptimisticDelete}
+                    />
+                ) : (
+                    <p
+                        onClick={() => setEditing(true)}
+                        className="bullet leading-relaxed cursor-text flex-1 word-break whitespace-pre-wrap"
+                    >
+                        {optimisticText}
+                    </p>
+                )}
+            </>
+        );
+    }
 
-            {editing ? (
-                <EditableBulletForm
-                    bullet={bullet}
-                    setLoading={setLoading}
-                    editing={editing}
-                    setEditing={setEditing}
-                    optimisticText={optimisticText}
-                    setOptimisticText={setOptimisticText}
-                    setOptimisticDelete={setOptimisticDelete}
-                />
-            ) : (
-                <p
-                    onClick={() => setEditing(true)}
-                    className="bullet leading-relaxed cursor-text flex-1 word-break whitespace-pre-wrap"
-                >
-                    {optimisticText}
-                </p>
-            )}
-        </Reorder.Item>
-    );
+    if (editing && smallDeviceDetected()) {
+        return (
+            <div className="flex gap-2 group">
+                <Content />
+            </div>
+        );
+    } else
+        return (
+            <Reorder.Item
+                layout="position"
+                as="div"
+                className="flex gap-2 group"
+                onDragEnd={onDragEnd}
+                dragListener={false}
+                dragControls={controls}
+                value={bullet.pos}
+            >
+                <Content />
+            </Reorder.Item>
+        );
 }
