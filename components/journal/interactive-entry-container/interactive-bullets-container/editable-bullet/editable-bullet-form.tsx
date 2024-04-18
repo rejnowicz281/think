@@ -29,25 +29,7 @@ export default function EditableBulletForm({
     }, [optimisticText]);
 
     useEffect(() => {
-        if (editing && textareaRef.current) {
-            textareaRef.current.focus({ preventScroll: true });
-
-            const main = document.getElementById("main");
-
-            if (main) {
-                const textareaRect = textareaRef.current.getBoundingClientRect();
-                const mainRect = main.getBoundingClientRect();
-
-                // Check if the bottom of the textarea is out of the viewport
-                if (textareaRect.bottom > mainRect.bottom) {
-                    // Calculate the position to scroll to, so that the bottom of the main element aligns with the bottom of the textarea, with a little padding
-                    const position = main.scrollTop + textareaRect.bottom - mainRect.bottom + 80;
-
-                    // Scroll to the calculated position
-                    main.scrollTo({ top: position, behavior: "smooth" });
-                }
-            }
-        }
+        if (editing && textareaRef.current) textareaRef.current.focus({ preventScroll: true });
     }, [editing]);
 
     function handleSubmit() {
@@ -82,6 +64,22 @@ export default function EditableBulletForm({
                     const temp_value = e.target.value;
                     e.target.value = "";
                     e.target.value = temp_value;
+
+                    const main = document.getElementById("main");
+
+                    if (main) {
+                        const textareaRect = e.target.getBoundingClientRect();
+                        const mainRect = main.getBoundingClientRect();
+
+                        // Check if the textarea is out of the viewport
+                        if (textareaRect.bottom + 80 > mainRect.bottom || textareaRect.top - 80 < mainRect.top) {
+                            // Calculate the position to scroll to, so that the bottom of the main element aligns with the bottom of the textarea, with a little padding
+                            const position = main.scrollTop + textareaRect.bottom + 80 - mainRect.bottom;
+
+                            // Scroll to the calculated position
+                            main.scrollTo({ top: position, behavior: "smooth" });
+                        }
+                    }
                 }}
                 onKeyDown={(e) => {
                     const cleared = e.currentTarget.value === "";
