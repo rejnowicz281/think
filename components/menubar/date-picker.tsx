@@ -20,11 +20,13 @@ export default function DatePicker() {
 
     return (
         <Popover
-            onOpenChange={() => {
-                const linkDate = pathname.split("/").pop();
+            onOpenChange={(open) => {
+                if (open) {
+                    const linkDate = pathname.split("/").pop();
 
-                if (linkDate === "write" || linkDate === today) setDate(undefined);
-                else if (linkDate) setDate(new Date(linkDate));
+                    if (!linkDate || linkDate === today) setDate(undefined);
+                    else if (linkDate) setDate(new Date(linkDate));
+                }
             }}
         >
             <PopoverTrigger asChild>

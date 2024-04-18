@@ -6,7 +6,7 @@ import smallDeviceDetected from "@/utils/general/small-device-detected";
 import { KeyboardEvent, useOptimistic, useRef, useState } from "react";
 import BulletForm from "./bullet-form";
 
-export default function NewBulletForm({ date, pos }: { date: string; pos: number }) {
+export default function NewBulletForm({ date, pos, placeholder }: { date: string; pos: number; placeholder?: string }) {
     const textareaRef = useRef<HTMLTextAreaElement>(null);
     const submitRef = useRef<HTMLButtonElement>(null);
     const { user } = useAuthContext();
@@ -73,6 +73,7 @@ export default function NewBulletForm({ date, pos }: { date: string; pos: number
             onAction={onAction}
             fullscreen={fullscreen}
             onKeyDown={onKeyDown}
+            placeholder={placeholder}
             onTextareaClick={onTextareaClick}
             loading={loading}
             textareaRef={textareaRef}

@@ -12,12 +12,12 @@ export default function Menubar() {
     return (
         <div className="flex items-center justify-center bg-zinc-100 dark:bg-zinc-900 border-t border-t-neutral-300 dark:border-t-neutral-800 p-2">
             <Button asChild variant="ghost">
-                <Link href="/write">
+                <Link href="/">
                     <PiNotePencil className="w-6 h-6" />
                 </Link>
             </Button>
             <Button asChild variant="ghost">
-                <Link href="/">
+                <Link href="/journal">
                     <IoJournalOutline className="w-6 h-6" />
                 </Link>
             </Button>
