@@ -79,7 +79,9 @@ export default function EditableBulletForm({
         const goToNextBullet = () => {
             e.preventDefault();
 
-            const nextBulletSibling = e.currentTarget.parentElement?.parentElement?.nextElementSibling;
+            const nextBulletSibling =
+                e.currentTarget.parentElement?.parentElement?.parentElement?.parentElement?.parentElement
+                    ?.nextElementSibling;
 
             if (nextBulletSibling) {
                 const nextBullet = nextBulletSibling.querySelector(".bullet") as HTMLElement;
@@ -95,9 +97,10 @@ export default function EditableBulletForm({
         if (backspaceStart || leftArrowStart) {
             e.preventDefault();
 
-            const prevBullet = e.currentTarget.parentElement?.parentElement?.previousElementSibling?.querySelector(
-                ".bullet"
-            ) as HTMLElement;
+            const prevBullet =
+                e.currentTarget.parentElement?.parentElement?.parentElement?.parentElement?.parentElement?.previousElementSibling?.querySelector(
+                    ".bullet"
+                ) as HTMLElement;
 
             if (prevBullet) prevBullet.click();
             else if (cleared) goToNextBullet();

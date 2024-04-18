@@ -45,10 +45,8 @@ export default function NewBulletForm({ date, pos }: { date: string; pos: number
 
         if (cleared || leftArrowStart) {
             e.preventDefault();
-            const bulletParagraphs = e.currentTarget.parentElement?.previousElementSibling?.querySelectorAll(
-                ".bullet"
-            ) as NodeListOf<HTMLElement>;
-            const lastBullet = bulletParagraphs[bulletParagraphs.length - 1];
+            const bullets = document.querySelectorAll(".bullet") as NodeListOf<HTMLElement>;
+            const lastBullet = bullets[bullets.length - 1];
             if (lastBullet) lastBullet.click();
         } else if (enterShift) {
             e.preventDefault();
