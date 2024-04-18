@@ -10,7 +10,9 @@ export default async function DashboardLayout({ children }: { children: ReactNod
         <AuthProvider user={user}>
             <div className="flex-1 flex-col flex">
                 <div className="relative flex-1">
-                    <div className="absolute overflow-y-auto inset-0 flex flex-col">{children}</div>
+                    <div className="absolute overflow-y-auto inset-0 flex flex-col" id="main">
+                        {children}
+                    </div>
                 </div>
                 <Menubar />
             </div>

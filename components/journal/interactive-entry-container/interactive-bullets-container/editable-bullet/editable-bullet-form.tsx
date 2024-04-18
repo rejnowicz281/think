@@ -29,7 +29,25 @@ export default function EditableBulletForm({
     }, [optimisticText]);
 
     useEffect(() => {
-        if (editing && textareaRef.current) textareaRef.current.focus({ preventScroll: true });
+        if (editing && textareaRef.current) {
+            textareaRef.current.focus({ preventScroll: true });
+
+            const main = document.getElementById("main");
+
+            if (main) {
+                const textareaRect = textareaRef.current.getBoundingClientRect();
+                const mainRect = main.getBoundingClientRect();
+
+                // Check if the bottom of the textarea is out of the viewport
+                if (textareaRect.bottom > mainRect.bottom) {
+                    // Calculate the position to scroll to, so that the bottom of the main element aligns with the bottom of the textarea, with a little padding
+                    const position = main.scrollTop + textareaRect.bottom - mainRect.bottom + 80;
+
+                    // Scroll to the calculated position
+                    main.scrollTo({ top: position, behavior: "smooth" });
+                }
+            }
+        }
     }, [editing]);
 
     function handleSubmit() {
