@@ -1,99 +1,85 @@
 "use client";
 
-import createBullet from "@/actions/journal/modify/create-bullet";
 import { Button } from "@/components/ui/button";
-import useAuthContext from "@/providers/auth-provider";
-import smallDeviceDetected from "@/utils/general/small-device-detected";
 import clsx from "clsx";
-import { useOptimistic, useRef, useState } from "react";
+import { DragControls } from "framer-motion";
+import { FocusEvent, FormEvent, KeyboardEvent } from "react";
 import ReactTextareaAutosize from "react-textarea-autosize";
 import BulletIndicator from "./bullet-indicator";
 
 export default function BulletForm({
     date,
     pos,
+    bulletId,
+    userId,
+    textareaClassName,
     placeholder = "Write something here...",
+    onFocus,
+    textareaId,
+    defaultTextareaValue,
+    fullscreen,
+    onSubmit,
+    onAction,
+    onKeyDown,
+    onBlur,
+    onTextareaClick,
+    loading,
+    textareaRef,
+    submitRef,
+    controls,
 }: {
+    controls?: DragControls;
+    bulletId?: string;
+    userId?: string;
+    onBlur?: (e: FocusEvent<HTMLTextAreaElement, Element>) => void;
+    onSubmit: (e: FormEvent<HTMLFormElement>) => void;
+    onKeyDown?: (e: KeyboardEvent<HTMLTextAreaElement>) => void;
+    onTextareaClick?: (e: React.MouseEvent<HTMLTextAreaElement, MouseEvent>) => void;
+    onFocus?: (e: FocusEvent<HTMLTextAreaElement, Element>) => void;
+    onAction: (formData: FormData) => void;
+    fullscreen: boolean;
+    defaultTextareaValue?: string;
+    textareaId?: string;
+    textareaClassName?: string;
     date?: string;
     pos?: number;
     placeholder?: string;
+    loading: boolean;
+    textareaRef: React.RefObject<HTMLTextAreaElement>;
+    submitRef: React.RefObject<HTMLButtonElement>;
 }) {
-    const textareaRef = useRef<HTMLTextAreaElement>(null);
-    const submitRef = useRef<HTMLButtonElement>(null);
-    const { user } = useAuthContext();
-    const [loading, setLoading] = useOptimistic(false);
-    const [fullscreen, setFullscreen] = useState(false);
-
-    function handleSubmit() {
-        if (submitRef.current && !loading) submitRef.current.click();
-    }
-
-    async function handleAction(formData: FormData) {
-        const inputFormData = formData.get("text");
-        const input = typeof inputFormData === "string" ? inputFormData.trim() : "";
-
-        if (input === "") return;
-
-        setLoading(true);
-
-        const res = await createBullet(formData);
-
-        setLoading(false);
-
-        if (res && textareaRef.current) textareaRef.current.value = "";
-    }
-
     return (
         <div
             className={clsx(
                 fullscreen && "fixed inset-0 z-10 dark:bg-[#121212] bg-white sm:static sm:z-0",
-                "flex gap-2"
+                "flex-1 flex flex-col"
             )}
         >
-            <form className="flex-1 flex flex-col" onSubmit={() => setFullscreen(false)} action={handleAction}>
-                <input type="hidden" name="user_id" value={user.id} />
+            <form className="flex-1 flex flex-col" onSubmit={onSubmit} action={onAction}>
+                {userId && <input type="hidden" name="user_id" value={userId} />}
                 {date && <input type="hidden" name="date" value={date} />}
-                <input type="hidden" name="pos" value={pos || 1} />
+                {pos && <input type="hidden" name="pos" value={pos} />}
+                {bulletId && <input type="hidden" name="id" value={bulletId} />}
                 <div className="flex flex-1 gap-2">
                     <div className={clsx(fullscreen && "p-4 pr-0 sm:p-0")}>
-                        <BulletIndicator loading={loading} />
+                        <BulletIndicator loading={loading} controls={controls} />
                     </div>
                     <div className="flex flex-col flex-1">
                         <ReactTextareaAutosize
-                            onKeyDown={(e) => {
-                                const cleared = e.key === "Backspace" && e.currentTarget.selectionStart === 0;
-                                const leftArrowStart = e.key === "ArrowLeft" && e.currentTarget.selectionStart === 0;
-                                const enterShift = e.key === "Enter" && e.shiftKey;
-
-                                if (cleared || leftArrowStart) {
-                                    e.preventDefault();
-                                    const bulletParagraphs =
-                                        e.currentTarget.parentElement?.previousElementSibling?.querySelectorAll(
-                                            ".bullet"
-                                        ) as NodeListOf<HTMLElement>;
-                                    const lastBullet = bulletParagraphs[bulletParagraphs.length - 1];
-                                    if (lastBullet) lastBullet.click();
-                                } else if (enterShift) {
-                                    e.preventDefault();
-                                    handleSubmit();
-                                }
-                            }}
-                            onFocus={(e) => {
-                                const temp_value = e.target.value;
-                                e.target.value = "";
-                                e.target.value = temp_value;
-                            }}
-                            onBlur={fullscreen ? undefined : handleSubmit}
+                            onFocus={onFocus}
+                            onKeyDown={onKeyDown}
+                            onBlur={onBlur}
                             name="text"
                             placeholder={placeholder}
                             className={clsx(
+                                textareaClassName,
                                 fullscreen ? "basis-full p-4 pl-0 sm:p-0" : "overflow-hidden",
-                                "sm:overflow-hidden sm:basis-auto new-bullet-form bg-inherit outline-none resize-none"
+                                "sm:overflow-hidden sm:basis-auto bg-inherit outline-none leading-relaxed resize-none"
                             )}
+                            defaultValue={defaultTextareaValue}
+                            id={textareaId}
                             ref={textareaRef}
-                            onClick={() => {
-                                if (smallDeviceDetected()) setFullscreen(true);
-                            }}
+                            onClick={onTextareaClick}
                         />
                     </div>
                 </div>

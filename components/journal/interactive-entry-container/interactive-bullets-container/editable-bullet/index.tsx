@@ -1,11 +1,11 @@
 "use client";
 
+import BulletIndicator from "@/components/journal/bullet-form/bullet-indicator";
 import { Bullet } from "@/types/bullet";
 import smallDeviceDetected from "@/utils/general/small-device-detected";
 import { Reorder, useDragControls } from "framer-motion";
 import { useOptimistic, useState } from "react";
 import EditableBulletForm from "./editable-bullet-form";
-import EditableBulletIndicator from "./editable-bullet-indicator";
 
 export default function EditableBullet({ bullet, onDragEnd }: { bullet: Bullet; onDragEnd: () => any }) {
     const [optimisticText, setOptimisticText] = useOptimistic(bullet.text);
@@ -16,12 +16,15 @@ export default function EditableBullet({ bullet, onDragEnd }: { bullet: Bullet; 
 
     if (optimisticDelete) return null;
 
+    const fullscreen = smallDeviceDetected() && editing;
+
     function Content() {
         return (
             <>
-                <EditableBulletIndicator loading={loading} controls={controls} />
                 {editing ? (
                     <EditableBulletForm
+                        controls={fullscreen ? undefined : controls}
+                        loading={loading}
                         bullet={bullet}
                         setLoading={setLoading}
                         editing={editing}
@@ -31,18 +34,21 @@ export default function EditableBullet({ bullet, onDragEnd }: { bullet: Bullet; 
                         setOptimisticDelete={setOptimisticDelete}
                     />
                 ) : (
-                    <p
-                        onClick={() => setEditing(true)}
-                        className="bullet leading-relaxed cursor-text flex-1 word-break whitespace-pre-wrap"
-                    >
-                        {optimisticText}
-                    </p>
+                    <>
+                        <BulletIndicator loading={loading} controls={controls} />
+                        <p
+                            onClick={() => setEditing(true)}
+                            className="bullet leading-relaxed cursor-text flex-1 word-break whitespace-pre-wrap"
+                        >
+                            {optimisticText}
+                        </p>
+                    </>
                 )}
             </>
         );
     }
 
-    if (editing && smallDeviceDetected()) {
+    if (fullscreen) {
         return (
             <div className="flex gap-2 group">
                 <Content />

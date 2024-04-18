@@ -1,5 +1,5 @@
-import BulletForm from "@/components/journal/bullet-form";
 import { Bullet } from "@/types/bullet";
+import NewBulletForm from "../new-bullet-form";
 import InteractiveBulletsContainer from "./interactive-bullets-container";
 
 export default function InteractiveEntryContainer({ bullets, date }: { bullets: Bullet[]; date: string }) {
@@ -26,7 +26,7 @@ export default function InteractiveEntryContainer({ bullets, date }: { bullets: 
 
             <div className="flex flex-col gap-2">
                 <InteractiveBulletsContainer bulletList={bullets} />
-                <BulletForm date={fullDate} pos={bullets.length + 1} />
+                <NewBulletForm date={fullDate} pos={bullets.length + 1} />
             </div>
         </div>
     );

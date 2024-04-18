@@ -1,8 +1,10 @@
 import deleteBullet from "@/actions/journal/modify/delete-bullet";
 import updateBullet from "@/actions/journal/modify/update-bullet";
+import BulletForm from "@/components/journal/bullet-form";
 import { Bullet } from "@/types/bullet";
+import smallDeviceDetected from "@/utils/general/small-device-detected";
+import { DragControls } from "framer-motion";
 import { FocusEvent, KeyboardEvent, useEffect, useRef } from "react";
-import ReactTextareaAutosize from "react-textarea-autosize";
 
 export default function EditableBulletForm({
     setLoading,
@@ -12,7 +14,11 @@ export default function EditableBulletForm({
     setOptimisticText,
     setOptimisticDelete,
     bullet,
+    loading,
+    controls,
 }: {
+    loading: boolean;
+    controls?: DragControls;
     setLoading: (loading: boolean) => void;
     setEditing: (editing: boolean) => void;
     editing: boolean;
@@ -24,6 +30,8 @@ export default function EditableBulletForm({
     const textareaRef = useRef<HTMLTextAreaElement>(null);
     const submitRef = useRef<HTMLButtonElement>(null);
 
+    const fullscreen = smallDeviceDetected() && editing;
+
     useEffect(() => {
         if (textareaRef.current) textareaRef.current.value = optimisticText;
     }, [optimisticText]);
@@ -32,10 +40,15 @@ export default function EditableBulletForm({
         if (editing && textareaRef.current) textareaRef.current.focus({ preventScroll: true });
     }, [editing]);
 
-    function handleFocus(e: FocusEvent<HTMLTextAreaElement, Element>) {
+    function onFocus(e: FocusEvent<HTMLTextAreaElement, Element>) {
         const temp_value = e.target.value;
         e.target.value = "";
         e.target.value = temp_value;
+
+        if (fullscreen) {
+            e.target.scrollTo({ top: e.target.scrollHeight, behavior: "smooth" });
+            return;
+        }
 
         const main = document.getElementById("main");
 
@@ -54,7 +67,9 @@ export default function EditableBulletForm({
         }
     }
 
-    function handleKeyDown(e: KeyboardEvent<HTMLTextAreaElement>) {
+    function onKeyDown(e: KeyboardEvent<HTMLTextAreaElement>) {
+        if (fullscreen) return;
+
         const cleared = e.currentTarget.value === "";
         const backspaceStart = e.key === "Backspace" && e.currentTarget.selectionStart === 0;
         const leftArrowStart = e.key === "ArrowLeft" && e.currentTarget.selectionStart === 0;
@@ -71,7 +86,7 @@ export default function EditableBulletForm({
 
                 if (nextBullet) nextBullet.click();
             } else {
-                const bulletForm = document.querySelector(".new-bullet-form") as HTMLElement;
+                const bulletForm = document.querySelector(".new-bullet-form-textarea") as HTMLElement;
 
                 if (bulletForm) bulletForm.focus();
             }
@@ -87,17 +102,14 @@ export default function EditableBulletForm({
             if (prevBullet) prevBullet.click();
             else if (cleared) goToNextBullet();
         } else if (rightArrowEnd) goToNextBullet();
-        else if (enterShift) handleSubmit();
+        else if (enterShift) runSubmit();
     }
 
-    function handleSubmit() {
-        if (submitRef.current) {
-            submitRef.current.click();
-            setEditing(false);
-        }
+    function runSubmit() {
+        if (submitRef.current) submitRef.current.click();
     }
 
-    async function handleAction(formData: FormData) {
+    async function onAction(formData: FormData) {
         const inputFormData = formData.get("text");
         const input = typeof inputFormData === "string" ? inputFormData.trim() : "";
 
@@ -115,20 +127,20 @@ export default function EditableBulletForm({
     }
 
     return (
-        <form className="flex-1 flex flex-col" action={handleAction}>
-            <input type="hidden" name="id" value={bullet.id} />
-            <ReactTextareaAutosize
-                onFocus={handleFocus}
-                onKeyDown={handleKeyDown}
-                onBlur={handleSubmit}
-                id={`text-${bullet.id}`}
-                name="text"
-                defaultValue={optimisticText}
-                className="bg-inherit outline-none resize-none overflow-hidden leading-relaxed"
-                ref={textareaRef}
-            />
-
-            <button type="submit" ref={submitRef} className="hidden"></button>
-        </form>
+        <BulletForm
+            controls={controls}
+            bulletId={bullet.id}
+            textareaClassName="bullet"
+            onSubmit={() => setEditing(false)}
+            onFocus={onFocus}
+            onKeyDown={onKeyDown}
+            onBlur={runSubmit}
+            onAction={onAction}
+            fullscreen={fullscreen}
+            defaultTextareaValue={optimisticText}
+            loading={loading}
+            textareaRef={textareaRef}
+            submitRef={submitRef}
+        />
     );
 }
