@@ -24,7 +24,7 @@ export default function DatePicker() {
                 if (open) {
                     const linkDate = pathname.split("/").pop();
 
-                    if (!linkDate || linkDate === today) setDate(undefined);
+                    if (!linkDate || linkDate === "journal" || linkDate === today) setDate(undefined);
                     else if (linkDate) setDate(new Date(linkDate));
                 }
             }}
