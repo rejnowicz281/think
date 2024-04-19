@@ -17,5 +17,7 @@ export default async function getDateBullets(
 
     if (error) return actionError(actionName, { error: error.message });
 
+    if (bullets) bullets.forEach((bullet: Bullet, idx: number) => (bullet.pos = idx));
+
     return actionSuccess(actionName, { bullets }, { logData: false });
 }
