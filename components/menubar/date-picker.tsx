@@ -25,9 +25,8 @@ export default function DatePicker() {
                     const lastPathname = pathname.split("/").pop();
 
                     const linkDate = lastPathname?.match(/^\d{4}-\d{2}-\d{2}$/)?.[0];
-                    console.log(linkDate);
 
-                    if (!linkDate || linkDate === "journal" || linkDate === today) setDate(undefined);
+                    if (!linkDate || linkDate === today) setDate(undefined);
                     else if (linkDate) setDate(new Date(linkDate));
                 }
             }}
