@@ -2,6 +2,7 @@
 
 import actionError from "@/utils/actions/action-error";
 import actionSuccess from "@/utils/actions/action-success";
+import { createClient as createServerClient } from "@/utils/supabase/server";
 import { createClient } from "@supabase/supabase-js";
 
 export default async function deleteAccount() {
@@ -21,7 +22,7 @@ export default async function deleteAccount() {
     const {
         data: { user },
         error: userError,
-    } = await supabase.auth.getUser();
+    } = await createServerClient().auth.getUser();
 
     if (userError || !user) return actionError(actionName, { error: "Must be logged in to proceed" });
 

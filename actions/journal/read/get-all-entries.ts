@@ -15,10 +15,10 @@ export default async function getAllEntries(): Promise<ActionResponse & { entrie
     if (error) return actionError(actionName, { error: error.message });
 
     // Group bullets by date
-    const entries = bullets.reduce((acc, bullet, idx) => {
+    const entries = bullets.reduce((acc, bullet) => {
         const date = bullet.date;
         if (!acc[date]) acc[date] = [];
-        bullet.pos = idx;
+
         acc[date].push(bullet);
 
         return acc;
