@@ -15,9 +15,11 @@ import GithubLoginButton from "./github-login-button";
 import GoogleLoginButton from "./google-login-button";
 
 export default function AuthContainer({ action = "login" }: { action: "login" | "register" }) {
-    const generalError = useSearchParams().get("error");
-    const emailError = useSearchParams().get("email-error");
-    const passwordError = useSearchParams().get("password-error");
+    const params = useSearchParams();
+
+    const generalError = params?.get("error");
+    const emailError = params?.get("email-error");
+    const passwordError = params?.get("password-error");
 
     return (
         <div className="flex-1 mx-auto max-w-[400px] w-full flex flex-col gap-6 justify-center">
