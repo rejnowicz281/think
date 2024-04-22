@@ -22,7 +22,9 @@ export default async function createBullet(formData: FormData) {
             : new Date().toISOString().split("T")[0];
     const pos = typeof posFormData === "string" ? parseInt(posFormData) : null;
 
-    if (!text || !user_id || !pos) return actionError(actionName, { error: "Invalid Form Data" });
+    const posIsInvalid = !pos || pos < 0;
+
+    if (!text || !user_id || posIsInvalid) return actionError(actionName, { error: "Invalid Form Data" });
 
     const { error } = await supabase.from("bullets").insert({
         text,

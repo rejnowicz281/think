@@ -17,7 +17,5 @@ export default async function getDateBullets(
 
     bullets?.sort((a: Bullet, b: Bullet) => a.pos - b.pos); // Sort bullets by pos
 
-    bullets?.forEach((bullet: Bullet, idx: number) => (bullet.pos = idx)); // Update pos to match index (in case of missing bullets)
-
     return actionSuccess(actionName, { bullets }, { logData: false });
 }

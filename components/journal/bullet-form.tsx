@@ -48,6 +48,8 @@ export default function BulletForm({
     textareaRef: React.RefObject<HTMLTextAreaElement>;
     submitRef: React.RefObject<HTMLButtonElement>;
 }) {
+    const posIsValid = typeof pos === "number" && pos >= 0;
+
     return (
         <div
             className={clsx(
@@ -56,10 +58,10 @@ export default function BulletForm({
             )}
         >
             <form className="flex-1 flex flex-col" onSubmit={onSubmit} action={onAction}>
-                {userId && <input type="hidden" name="user_id" value={userId} />}
-                {date && <input type="hidden" name="date" value={date} />}
-                {pos && <input type="hidden" name="pos" value={pos} />}
-                {bulletId && <input type="hidden" name="id" value={bulletId} />}
+                {userId ? <input type="hidden" name="user_id" value={userId} /> : null}
+                {date ? <input type="hidden" name="date" value={date} /> : null}
+                {posIsValid ? <input type="hidden" name="pos" value={pos} /> : null}
+                {bulletId ? <input type="hidden" name="id" value={bulletId} /> : null}
                 <div className="flex flex-1 gap-2">
                     <div className={clsx(fullscreen && "p-4 pr-0 sm:p-0")}>
                         <BulletIndicator loading={loading} controls={controls} />
