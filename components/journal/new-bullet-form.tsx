@@ -68,7 +68,7 @@ export default function NewBulletForm({ date, pos, placeholder }: { date: string
             ))}
             <BulletForm
                 date={date}
-                pos={pos || 1}
+                pos={pos + optimisticBullets.length}
                 userId={user.id}
                 textareaClassName="new-bullet-form-textarea"
                 onBlur={onBlur}

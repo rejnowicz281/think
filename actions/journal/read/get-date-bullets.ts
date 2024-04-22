@@ -11,13 +11,13 @@ export default async function getDateBullets(
 
     const supabase = createClient();
 
-    const formattedDate = new Date(date).toISOString().split("T")[0];
-
-    const { data: bullets, error } = await supabase.rpc("get_bullets_from_date", { date_to_search: formattedDate });
+    const { data: bullets, error } = await supabase.rpc("get_bullets_from_date", { date_to_search: date });
 
     if (error) return actionError(actionName, { error: error.message });
 
-    if (bullets) bullets.forEach((bullet: Bullet, idx: number) => (bullet.pos = idx));
+    bullets?.sort((a: Bullet, b: Bullet) => a.pos - b.pos); // Sort bullets by pos
+
+    bullets?.forEach((bullet: Bullet, idx: number) => (bullet.pos = idx)); // Update pos to match index (in case of missing bullets)
 
     return actionSuccess(actionName, { bullets }, { logData: false });
 }
