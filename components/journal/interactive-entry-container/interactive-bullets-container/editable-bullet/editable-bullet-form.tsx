@@ -140,6 +140,7 @@ export default function EditableBulletForm({
             onBlur={runSubmit}
             onAction={onAction}
             fullscreen={fullscreen}
+            placeholder=""
             defaultTextareaValue={optimisticText}
             loading={loading}
             textareaRef={textareaRef}

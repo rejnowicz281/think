@@ -3,7 +3,7 @@ import { VscLoading } from "@react-icons/all-files/vsc/VscLoading";
 import { DragControls } from "framer-motion";
 import { PointerEvent } from "react";
 
-export default function BulletIndicator({ loading, controls }: { loading: boolean; controls?: DragControls }) {
+export default function BulletIndicator({ loading = false, controls }: { loading?: boolean; controls?: DragControls }) {
     if (loading) return <VscLoading className="animate-spin w-2 h-2 mt-2" />;
     else if (controls) {
         return (

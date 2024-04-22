@@ -1,6 +1,7 @@
 "use client";
 
-import BulletIndicator from "@/components/journal/bullet-form/bullet-indicator";
+import BulletIndicator from "@/components/journal/bullet-container/bullet-indicator";
+import BulletText from "@/components/journal/bullet-container/bullet-text";
 import { Bullet } from "@/types/bullet";
 import smallDeviceDetected from "@/utils/general/small-device-detected";
 import { Reorder, useDragControls } from "framer-motion";
@@ -36,12 +37,7 @@ export default function EditableBullet({ bullet, onDragEnd }: { bullet: Bullet; 
                 ) : (
                     <>
                         <BulletIndicator loading={loading} controls={controls} />
-                        <p
-                            onClick={() => setEditing(true)}
-                            className="bullet leading-relaxed cursor-text flex-1 word-break whitespace-pre-wrap"
-                        >
-                            {optimisticText}
-                        </p>
+                        <BulletText text={optimisticText} onClick={() => setEditing(true)} />
                     </>
                 )}
             </>

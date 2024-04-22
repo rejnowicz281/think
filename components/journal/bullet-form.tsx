@@ -5,7 +5,7 @@ import clsx from "clsx";
 import { DragControls } from "framer-motion";
 import { FocusEvent, FormEvent, KeyboardEvent } from "react";
 import ReactTextareaAutosize from "react-textarea-autosize";
-import BulletIndicator from "./bullet-indicator";
+import BulletIndicator from "./bullet-container/bullet-indicator";
 
 export default function BulletForm({
     date,
@@ -23,7 +23,7 @@ export default function BulletForm({
     onKeyDown,
     onBlur,
     onTextareaClick,
-    loading,
+    loading = false,
     textareaRef,
     submitRef,
     controls,
@@ -44,7 +44,7 @@ export default function BulletForm({
     date?: string;
     pos?: number;
     placeholder?: string;
-    loading: boolean;
+    loading?: boolean;
     textareaRef: React.RefObject<HTMLTextAreaElement>;
     submitRef: React.RefObject<HTMLButtonElement>;
 }) {

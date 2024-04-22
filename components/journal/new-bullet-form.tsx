@@ -4,21 +4,22 @@ import createBullet from "@/actions/journal/modify/create-bullet";
 import useAuthContext from "@/providers/auth-provider";
 import smallDeviceDetected from "@/utils/general/small-device-detected";
 import { KeyboardEvent, useOptimistic, useRef, useState } from "react";
+import BulletContainer from "./bullet-container";
 import BulletForm from "./bullet-form";
 
 export default function NewBulletForm({ date, pos, placeholder }: { date: string; pos: number; placeholder?: string }) {
     const textareaRef = useRef<HTMLTextAreaElement>(null);
     const submitRef = useRef<HTMLButtonElement>(null);
     const { user } = useAuthContext();
-    const [loading, setLoading] = useOptimistic(false);
     const [fullscreen, setFullscreen] = useState(false);
+    const [optimisticBullets, setOptimisticBullets] = useOptimistic<string[]>([]);
 
     function onSubmit() {
         setFullscreen(false);
     }
 
     function runSubmit() {
-        if (submitRef.current && !loading) submitRef.current.click();
+        if (submitRef.current) submitRef.current.click();
     }
 
     async function onAction(formData: FormData) {
@@ -27,13 +28,11 @@ export default function NewBulletForm({ date, pos, placeholder }: { date: string
 
         if (input === "") return;
 
-        setLoading(true);
+        setOptimisticBullets((prev) => [...prev, input]);
 
-        const res = await createBullet(formData);
+        createBullet(formData);
 
-        setLoading(false);
-
-        if (res && textareaRef.current) textareaRef.current.value = "";
+        if (textareaRef.current) textareaRef.current.value = "";
     }
 
     function onKeyDown(e: KeyboardEvent<HTMLTextAreaElement>) {
@@ -63,21 +62,25 @@ export default function NewBulletForm({ date, pos, placeholder }: { date: string
     }
 
     return (
-        <BulletForm
-            date={date}
-            pos={pos || 1}
-            userId={user.id}
-            textareaClassName="new-bullet-form-textarea"
-            onBlur={onBlur}
-            onSubmit={onSubmit}
-            onAction={onAction}
-            fullscreen={fullscreen}
-            onKeyDown={onKeyDown}
-            placeholder={placeholder}
-            onTextareaClick={onTextareaClick}
-            loading={loading}
-            textareaRef={textareaRef}
-            submitRef={submitRef}
-        />
+        <>
+            {optimisticBullets.map((text, i) => (
+                <BulletContainer key={i} text={text} loading={true} />
+            ))}
+            <BulletForm
+                date={date}
+                pos={pos || 1}
+                userId={user.id}
+                textareaClassName="new-bullet-form-textarea"
+                onBlur={onBlur}
+                onSubmit={onSubmit}
+                onAction={onAction}
+                fullscreen={fullscreen}
+                onKeyDown={onKeyDown}
+                placeholder={placeholder}
+                onTextareaClick={onTextareaClick}
+                textareaRef={textareaRef}
+                submitRef={submitRef}
+            />
+        </>
     );
 }
