@@ -4,19 +4,26 @@ import updateBulletsPos from "@/actions/journal/modify/update-bullets-pos";
 import NewBulletForm from "@/components/journal/new-bullet-form";
 import { Bullet } from "@/types/bullet";
 import { Reorder } from "framer-motion";
-import { useEffect, useOptimistic, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import EditableBullet from "./editable-bullet";
 
-export default function InteractiveBulletsContainer({ bulletList, date }: { bulletList: Bullet[]; date: string }) {
-    const [optimisticBullets, setOptimisticBullets] = useOptimistic<Bullet[]>(bulletList);
-    const [bullets, setBullets] = useState<Bullet[]>(bulletList);
+export default function InteractiveBulletsContainer({
+    optimisticBullets,
+    setOptimisticBullets,
+    date,
+}: {
+    optimisticBullets: Bullet[];
+    setOptimisticBullets: (action: Bullet[] | ((pendingState: Bullet[]) => Bullet[])) => void;
+    date: string;
+}) {
+    const [reorderBullets, setReorderBullets] = useState<Bullet[]>(optimisticBullets);
     const submitRef = useRef<HTMLButtonElement>(null);
 
     // making sure position is updated on error
     useEffect(() => {
-        if (JSON.stringify(bullets) === JSON.stringify(optimisticBullets)) return;
+        if (JSON.stringify(reorderBullets) === JSON.stringify(optimisticBullets)) return;
 
-        setBullets(optimisticBullets);
+        setReorderBullets(optimisticBullets);
     }, [optimisticBullets]);
 
     const newPos = (() => {
@@ -32,10 +39,10 @@ export default function InteractiveBulletsContainer({ bulletList, date }: { bull
             <form
                 className="hidden"
                 action={() => {
-                    if (JSON.stringify(bullets) === JSON.stringify(optimisticBullets)) return;
+                    if (JSON.stringify(reorderBullets) === JSON.stringify(optimisticBullets)) return;
 
-                    setOptimisticBullets(bullets);
-                    updateBulletsPos(bullets);
+                    setOptimisticBullets(reorderBullets);
+                    updateBulletsPos(reorderBullets);
                 }}
             >
                 <button ref={submitRef} type="submit" />
@@ -46,16 +53,16 @@ export default function InteractiveBulletsContainer({ bulletList, date }: { bull
                     className="flex flex-col gap-2"
                     onReorder={(values) => {
                         const newBullet = values.map((pos) => {
-                            const bullet = bullets.find((bullet) => bullet.pos === pos);
+                            const bullet = reorderBullets.find((bullet) => bullet.pos === pos);
                             if (bullet) bullet.pos = values.indexOf(pos);
                             return bullet;
                         });
-                        setBullets(newBullet as Bullet[]);
+                        setReorderBullets(newBullet as Bullet[]);
                     }}
                     axis="y"
-                    values={bullets.map((bullet) => bullet.pos)}
+                    values={reorderBullets.map((bullet) => bullet.pos)}
                 >
-                    {bullets.map((bullet) =>
+                    {reorderBullets.map((bullet) =>
                         (() => {
                             const optimisticBullet = optimisticBullets.find((b) => b.id === bullet.id);
                             if (!optimisticBullet) return null;
