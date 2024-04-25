@@ -1,7 +1,6 @@
 "use client";
 
 import createBullet from "@/actions/journal/modify/create-bullet";
-import useAuthContext from "@/providers/auth-provider";
 import smallDeviceDetected from "@/utils/general/small-device-detected";
 import { KeyboardEvent, useOptimistic, useRef, useState } from "react";
 import BulletContainer from "./bullet-container";
@@ -10,7 +9,6 @@ import BulletForm from "./bullet-form";
 export default function NewBulletForm({ date, pos, placeholder }: { date: string; pos: number; placeholder?: string }) {
     const textareaRef = useRef<HTMLTextAreaElement>(null);
     const submitRef = useRef<HTMLButtonElement>(null);
-    const { user } = useAuthContext();
     const [fullscreen, setFullscreen] = useState(false);
     const [optimisticBullets, setOptimisticBullets] = useOptimistic<string[]>([]);
 
@@ -69,7 +67,6 @@ export default function NewBulletForm({ date, pos, placeholder }: { date: string
             <BulletForm
                 date={date}
                 pos={pos + optimisticBullets.length}
-                userId={user.id}
                 textareaClassName="new-bullet-form-textarea"
                 onBlur={onBlur}
                 onSubmit={onSubmit}

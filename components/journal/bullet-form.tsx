@@ -11,7 +11,6 @@ export default function BulletForm({
     date,
     pos,
     bulletId,
-    userId,
     textareaClassName,
     placeholder = "Write something here...",
     onFocus,
@@ -30,7 +29,6 @@ export default function BulletForm({
 }: {
     controls?: DragControls;
     bulletId?: string;
-    userId?: string;
     onBlur?: (e: FocusEvent<HTMLTextAreaElement, Element>) => void;
     onSubmit: (e: FormEvent<HTMLFormElement>) => void;
     onKeyDown?: (e: KeyboardEvent<HTMLTextAreaElement>) => void;
@@ -58,7 +56,6 @@ export default function BulletForm({
             )}
         >
             <form className="flex-1 flex flex-col" onSubmit={onSubmit} action={onAction}>
-                {userId ? <input type="hidden" name="user_id" value={userId} /> : null}
                 {date ? <input type="hidden" name="date" value={date} /> : null}
                 {posIsValid ? <input type="hidden" name="pos" value={pos} /> : null}
                 {bulletId ? <input type="hidden" name="id" value={bulletId} /> : null}
