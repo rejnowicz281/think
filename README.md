@@ -8,3 +8,5 @@ Interactive journaling app built with NextJS 14 and Supabase. Full TypeScript su
 -   **Minimalistic**: Focus on writing
 -   **Responsive**: Works on all devices
 -   **Dark mode**: Toggle between light and dark mode
+-   **Reorder functionality**: Drag and drop to reorder an entry's bullets
+-   **Merge Entries**: Merge two entries together by dragging one onto the other
