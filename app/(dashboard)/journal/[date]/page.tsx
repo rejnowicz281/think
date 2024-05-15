@@ -25,17 +25,15 @@ export default async function JournalEntryPage({ params: { date } }: { params: {
                 />
             </div>
 
-            <div className="dark:bg-[#121212] bg-white border-t dark:border-t-neutral-800 border-t-neutral-300 flex mt-16 sticky bottom-0">
-                <Button asChild variant="ghost" className="rounded-none flex-1">
+            <div className="dark:bg-[#121212] bg-white flex justify-end mt-16 pb-4 pr-4 sticky bottom-0">
+                <Button asChild variant="ghost" size="icon" className="rounded-full">
                     <Link className="flex items-center" href={`/journal/${prevDate}`}>
-                        <MdKeyboardArrowLeft className="mr-2 w-5 h-5" />
-                        <span className="hidden sm:inline">Previous Entry</span>
+                        <MdKeyboardArrowLeft className="w-7 h-7" />
                     </Link>
                 </Button>
-                <Button asChild variant="ghost" className="rounded-none flex-1">
+                <Button asChild variant="ghost" size="icon" className="rounded-full">
                     <Link className="flex items-center" href={`/journal/${nextDate}`}>
-                        <span className="hidden sm:inline">Next Entry</span>
-                        <MdKeyboardArrowRight className="ml-2 w-5 h-5" />
+                        <MdKeyboardArrowRight className="w-7 h-7" />
                     </Link>
                 </Button>
             </div>

@@ -8,7 +8,7 @@ import { MdOutlineSettings } from "@react-icons/all-files/md/MdOutlineSettings";
 import { PiNotePencil } from "@react-icons/all-files/pi/PiNotePencil";
 import { VscLoading } from "@react-icons/all-files/vsc/VscLoading";
 import dynamic from "next/dynamic";
-import Link from "next/link";
+import NavButton from "./nav-button";
 
 const LazyDatePicker = dynamic(() => import("./date-picker"), {
     ssr: false,
@@ -23,26 +23,14 @@ const LazyDatePicker = dynamic(() => import("./date-picker"), {
 
 export default function Menubar() {
     return (
-        <div className="flex items-center justify-center bg-zinc-100/40 dark:bg-zinc-900 border-t border-t-neutral-300 dark:border-t-neutral-800 p-2">
-            <Button asChild variant="ghost">
-                <Link href="/">
-                    <PiNotePencil className="w-6 h-6" />
-                </Link>
-            </Button>
-            <Button asChild variant="ghost">
-                <Link href="/journal">
-                    <IoJournalOutline className="w-6 h-6" />
-                </Link>
-            </Button>
+        <div className="flex-1 flex md:flex-col gap-4 items-center justify-center bg-zinc-100/40 dark:bg-zinc-900 md:bg-inherit md:dark:bg-inherit border-t border-t-neutral-300 md:border-t-0 dark:border-t-neutral-800 p-2">
+            <NavButton icon={<PiNotePencil className="w-6 h-6" />} href="/" />
+            <NavButton icon={<IoJournalOutline className="w-6 h-6" />} href="/journal" />
             <LazyDatePicker />
-            <Button asChild variant="ghost">
-                <Link href="/settings">
-                    <MdOutlineSettings className="w-6 h-6" />
-                </Link>
-            </Button>
+            <NavButton icon={<MdOutlineSettings className="w-6 h-6" />} href="/settings" />
 
             <form action={signOut}>
-                <Button asChild variant="ghost">
+                <Button asChild size="icon" className="rounded-full" variant="ghost">
                     <SubmitButton
                         content={<IoLogOutOutline className="w-6 h-6" />}
                         loading={<VscLoading className="w-6 h-6 animate-spin" />}

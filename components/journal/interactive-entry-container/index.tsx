@@ -51,7 +51,7 @@ export default function InteractiveEntryContainer({
                     }}
                 >
                     <input type="hidden" name="date" value={fullDate} />
-                    <Button variant="ghost" size="icon">
+                    <Button variant="ghost" size="icon" className="rounded-full">
                         <Trash2Icon className="w-6 h-6 text-gray-400" />
                     </Button>
                 </form>

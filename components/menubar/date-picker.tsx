@@ -32,7 +32,7 @@ export default function DatePicker() {
             }}
         >
             <PopoverTrigger asChild>
-                <Button variant="ghost">
+                <Button variant="ghost" size="icon" className="rounded-full">
                     <CalendarIcon className="w-6 h-6" />
                 </Button>
             </PopoverTrigger>
