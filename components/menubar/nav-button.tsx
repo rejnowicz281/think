@@ -9,7 +9,7 @@ import { ReactNode } from "react";
 export default function NavButton({ icon, href }: { icon: ReactNode; href: string }) {
     const pathname = usePathname();
 
-    const isActive = pathname === href || (pathname?.includes("/journal") && href === "/journal");
+    const isActive = href === "/" ? pathname === href : pathname?.includes(href);
 
     return (
         <Button
