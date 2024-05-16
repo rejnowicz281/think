@@ -71,9 +71,7 @@ export function Content() {
                 </Button>
             </PopoverTrigger>
             <PopoverContent className="flex w-auto flex-col space-y-2 p-2">
-                <Select
-                    onValueChange={(value) => setDate(value === "0" ? undefined : addDays(new Date(), parseInt(value)))}
-                >
+                <Select onValueChange={(value) => setDate(addDays(new Date(), parseInt(value)))}>
                     <SelectTrigger>
                         <SelectValue placeholder="Select" />
                     </SelectTrigger>
@@ -97,7 +95,7 @@ export function Content() {
                         setCurrentYear(date.getFullYear());
                     }}
                     onSelect={(date) => {
-                        setDate(!date || format(date, "yyyy-MM-dd") === today ? undefined : date);
+                        setDate(!date ? undefined : date);
                     }}
                     defaultMonth={date}
                 />
