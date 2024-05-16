@@ -1,5 +1,3 @@
-"use server";
-
 import { ActionResponse } from "@/types/action-response";
 import { Bullet } from "@/types/bullet";
 import actionError from "@/utils/actions/action-error";
