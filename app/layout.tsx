@@ -14,7 +14,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: ReactNode }) {
     return (
         <html className="h-full" lang="en">
-            <body className={clsx("min-h-full flex flex-col", GeistSans.className)}>
+            <body className={clsx("min-h-full dark:bg-[#121212] flex flex-col", GeistSans.className)}>
                 <ThemeProvider attribute="class" defaultTheme="dark">
                     <NextTopLoader height={4} showSpinner={false} />
                     {children}
