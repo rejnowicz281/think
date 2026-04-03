@@ -14,7 +14,7 @@ export default async function signUp(formData: FormData) {
     const email = typeof emailFormData === "string" ? emailFormData.trim() : null;
     const password = typeof passwordFormData === "string" ? passwordFormData.trim() : null;
 
-    const origin = headers().get("origin");
+    const origin = (await headers()).get("origin");
 
     const supabase = createClient();
 
@@ -28,18 +28,23 @@ export default async function signUp(formData: FormData) {
 
     const queryParamsString = queryParams.toString();
 
-    if (queryParamsString)
-        return actionError(actionName, { queryParams }, { redirectPath: `/register?${queryParamsString}` });
+    if (queryParamsString) {
+        actionError(actionName, { queryParams }, { redirectPath: `/register?${queryParamsString}` });
+        return;
+    }
 
     const { error } = await supabase.auth.signUp({
         email: email as string,
         password: password as string,
         options: {
-            emailRedirectTo: `${origin}/auth/callback`,
-        },
+            emailRedirectTo: `${origin}/auth/callback`
+        }
     });
 
-    if (error) return actionError(actionName, { error }, { redirectPath: `/register?error=${error.message}` });
+    if (error) {
+        actionError(actionName, { error }, { redirectPath: `/register?error=${error.message}` });
+        return;
+    }
 
-    return actionSuccess(actionName, {}, { redirectPath: "/" });
+    actionSuccess(actionName, {}, { redirectPath: "/" });
 }

@@ -1,26 +1,14 @@
 import signOut from "@/actions/auth/modify/sign-out";
 import SubmitButton from "@/components/general/submit-button";
 import { Button } from "@/components/ui/button";
-import { IoCalendarClearOutline as CalendarIcon } from "@react-icons/all-files/io5/IoCalendarClearOutline";
 import { IoJournalOutline } from "@react-icons/all-files/io5/IoJournalOutline";
 import { IoLogOutOutline } from "@react-icons/all-files/io5/IoLogOutOutline";
 import { IoSearch } from "@react-icons/all-files/io5/IoSearch";
 import { MdOutlineSettings } from "@react-icons/all-files/md/MdOutlineSettings";
 import { PiNotePencil } from "@react-icons/all-files/pi/PiNotePencil";
 import { VscLoading } from "@react-icons/all-files/vsc/VscLoading";
-import dynamic from "next/dynamic";
+import DatePicker from "./date-picker";
 import NavButton from "./nav-button";
-
-const LazyDatePicker = dynamic(() => import("./date-picker"), {
-    ssr: false,
-    loading: () => (
-        <>
-            <Button variant="ghost" size="icon" className="rounded-full">
-                <CalendarIcon className="w-6 h-6" />
-            </Button>
-        </>
-    ),
-});
 
 export default function Menubar() {
     return (
@@ -28,7 +16,7 @@ export default function Menubar() {
             <NavButton icon={<PiNotePencil className="w-6 h-6" />} href="/" />
             <NavButton icon={<IoJournalOutline className="w-6 h-6" />} href="/journal" />
             <NavButton icon={<IoSearch className="w-6 h-6" />} href="/search" />
-            <LazyDatePicker />
+            <DatePicker />
             <NavButton icon={<MdOutlineSettings className="w-6 h-6" />} href="/settings" />
 
             <form action={signOut}>

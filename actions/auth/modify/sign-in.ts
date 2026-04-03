@@ -10,17 +10,22 @@ export default async function signIn(formData: FormData) {
     const email = formData.get("email");
     const password = formData.get("password");
 
-    if (typeof email !== "string" || typeof password !== "string")
-        return actionError(actionName, {}, { redirectPath: "/login?error=Invalid Email or Password" });
+    if (typeof email !== "string" || typeof password !== "string") {
+        actionError(actionName, {}, { redirectPath: "/login?error=Invalid Email or Password" });
+        return;
+    }
 
     const supabase = createClient();
 
     const { error } = await supabase.auth.signInWithPassword({
         email,
-        password,
+        password
     });
 
-    if (error) return actionError(actionName, {}, { redirectPath: "/login?error=Invalid Email or Password" });
+    if (error) {
+        actionError(actionName, {}, { redirectPath: "/login?error=Invalid Email or Password" });
+        return;
+    }
 
-    return actionSuccess(actionName, {}, { redirectPath: "/" });
+    actionSuccess(actionName, {}, { redirectPath: "/" });
 }

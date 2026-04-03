@@ -7,7 +7,12 @@ import { MdKeyboardArrowRight } from "@react-icons/all-files/md/MdKeyboardArrowR
 import { addDays, format } from "date-fns";
 import Link from "next/link";
 
-export default async function JournalEntryPage({ params: { date } }: { params: { date: string } }) {
+type JournalEntryPageProps = {
+    params: Promise<{ date: string }>;
+};
+
+export default async function JournalEntryPage({ params }: JournalEntryPageProps) {
+    const { date } = await params;
     const { bullets } = await getDateBullets(date);
 
     if (!bullets) return <ErrorContainer />;

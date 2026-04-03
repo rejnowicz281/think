@@ -10,5 +10,5 @@ export default async function signOut() {
 
     await supabase.auth.signOut();
 
-    return actionSuccess(actionName, {}, { redirectPath: "/login" });
+    actionSuccess(actionName, {}, { redirectPath: "/login" });
 }

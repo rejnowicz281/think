@@ -14,29 +14,38 @@ export default async function deleteAccount() {
         {
             auth: {
                 autoRefreshToken: false,
-                persistSession: false,
-            },
+                persistSession: false
+            }
         }
     );
 
     const {
         data: { user },
-        error: userError,
+        error: userError
     } = await createServerClient().auth.getUser();
 
-    if (userError || !user) return actionError(actionName, { error: "Must be logged in to proceed" });
+    if (userError || !user) {
+        actionError(actionName, { error: "Must be logged in to proceed" });
+        return;
+    }
 
     const email = user.email;
 
-    if (email === "demo@demo.demo") return actionError(actionName, { error: "You cannot delete this demo account." });
+    if (email === "demo@demo.demo") {
+        actionError(actionName, { error: "You cannot delete this demo account." });
+        return;
+    }
 
     const id = user.id;
 
     const { error } = await supabase.auth.admin.deleteUser(id);
 
-    if (error) return actionError(actionName, { error });
+    if (error) {
+        actionError(actionName, { error });
+        return;
+    }
 
     await supabase.auth.signOut();
 
-    return actionSuccess(actionName, { id }, { redirectPath: "/login" });
+    actionSuccess(actionName, { id }, { redirectPath: "/login" });
 }

@@ -8,17 +8,20 @@ import { headers } from "next/headers";
 export default async function githubSignIn() {
     const actionName = "githubSignIn";
 
-    const origin = headers().get("origin");
+    const origin = (await headers()).get("origin");
     const supabase = createClient();
 
     const { data, error } = await supabase.auth.signInWithOAuth({
         provider: "github",
         options: {
-            redirectTo: `${origin}/auth/callback`,
-        },
+            redirectTo: `${origin}/auth/callback`
+        }
     });
 
-    if (error) return actionError(actionName, {}, { redirectPath: "/login?error=Could not authenticate user" });
+    if (error) {
+        actionError(actionName, {}, { redirectPath: "/login?error=Could not authenticate user" });
+        return;
+    }
 
-    return actionSuccess(actionName, {}, { redirectPath: data.url });
+    actionSuccess(actionName, {}, { redirectPath: data.url });
 }
